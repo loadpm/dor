@@ -14,6 +14,20 @@ export LANGUAGE=en_US.UTF-8
 
 #-----------------
 
+#ulimits
+echo 'fs.file-max = 500000' >> /etc/sysctl.conf
+tee /etc/security/limits.conf <<-'EOF'
+* soft nproc 500000
+* hard nproc 500000
+* soft nofile 500000
+* hard nofile 500000
+EOF
+
+sysctl -p
+#permanent
+ulimit -n 500000
+ulimit -u 500000
+
 # dhparams
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 4096
 
@@ -22,10 +36,6 @@ wget https://raw.githubusercontent.com/loadpm/dor/master/nginx_fast.conf -O /etc
 
 #bad bot
 wget https://raw.githubusercontent.com/loadpm/dor/master/ddos.conf -O /etc/nginx/fastpanel2-includes/ddos.conf
-
-#mariadb
-wget https://raw.githubusercontent.com/loadpm/VestaCP-Server-Installer/master/CentOS7/my.cnf -O /etc/my.cnf
-
 
 #restart service
 
